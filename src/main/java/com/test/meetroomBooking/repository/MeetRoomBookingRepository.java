@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface MeetRoomBookingRepository extends JpaRepository<MeetRoomBooking, String> {
+public interface MeetRoomBookingRepository extends JpaRepository<MeetRoomBooking, Integer> {
     @Query("Select res from MeetRoomBooking res inner join res.meetRoom sala where sala.id=:meetRoomId")
     List<MeetRoomBooking> findByMeetRoomId(Integer meetRoomId);
 
@@ -19,6 +19,12 @@ public interface MeetRoomBookingRepository extends JpaRepository<MeetRoomBooking
     List<MeetRoomBooking> findByMeetRoomId(String meetRoomName);
 
     @Query("Select res from MeetRoomBooking res where :fecha between res.fechaInicio and res.fechaFin")
-    Optional<MeetRoom> findMeetRoomBookingByFecha(Date fecha);
+    Optional<MeetRoomBooking> findMeetRoomBookingByFecha(Date fecha);
 
+    @Query("Select res from MeetRoomBooking res where (:start between res.fechaInicio and res.fechaFin) or (:end between res.fechaInicio and res.fechaFin)")
+    List<MeetRoomBooking> findMeetRoomBookingByPeriod(Date start, Date end);
+
+    List<MeetRoomBooking> findAll();
+
+    Optional<MeetRoomBooking> findById(Integer id);
 }

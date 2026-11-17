@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -21,16 +22,16 @@ public class MeetRoomBooking {
     private String responsable;
 
     @Column(name="FECHA_INICIO")
-    private Instant fechaInicio;
+    private Date fechaInicio;
 
     @Column(name="FECHA_FIN")
-    private Instant fechaFin;
+    private Date fechaFin;
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="MEETROOM_ID")
     private MeetRoom meetRoom;
 
-    public MeetRoomBooking(MeetRoom salon, String incharge, Instant dateInit, Instant dateFin){
+    public MeetRoomBooking(MeetRoom salon, String incharge, Date dateInit, Date dateFin){
         super();
         this.setResponsable(incharge);
         this.setMeetRoom(salon);
