@@ -25,7 +25,7 @@ public class MeetRoomService implements MeetRoomServiceInterface {
         List<MeetRoom> listado = meetRoomRepository.findAll();
         List<DTO_MeetRoom> resultadoList = new ArrayList<>();
 
-        if(listado!=null && !listado.isEmpty()){
+        if(!listado.isEmpty()){
             listado.forEach(
                     item -> {
                         resultadoList.add( MeetRoomDTOUtil.toDTO(item));

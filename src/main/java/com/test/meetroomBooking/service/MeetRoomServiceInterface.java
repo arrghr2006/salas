@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface MeetRoomServiceInterface {
 
-    public List<DTO_MeetRoom> getAll();
+    List<DTO_MeetRoom> getAll();
 
-    public DTO_MeetRoom getById(Integer id) throws RequestException;
+    DTO_MeetRoom getById(Integer id) throws RequestException;
 
-    public DTO_MeetRoom getByName(String name) throws RequestException;
+    DTO_MeetRoom getByName(String name) throws RequestException;
 }

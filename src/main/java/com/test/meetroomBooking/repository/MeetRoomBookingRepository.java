@@ -19,6 +19,6 @@ public interface MeetRoomBookingRepository extends JpaRepository<MeetRoomBooking
     List<MeetRoomBooking> findByMeetRoomId(String meetRoomName);
 
     @Query("Select res from MeetRoomBooking res where :fecha between res.fechaInicio and res.fechaFin")
-    public Optional<MeetRoom> findMeetRoomBookingByFecha(Date fecha);
+    Optional<MeetRoom> findMeetRoomBookingByFecha(Date fecha);
 
 }
