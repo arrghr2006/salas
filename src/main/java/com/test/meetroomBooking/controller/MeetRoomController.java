@@ -1,0 +1,42 @@
+package com.test.meetroomBooking.controller;
+
+import com.test.meetroomBooking.exception.RequestException;
+import com.test.meetroomBooking.model.dto.DTO_MeetRoom;
+import com.test.meetroomBooking.payload.MessageResponse;
+import com.test.meetroomBooking.service.MeetRoomService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@CrossOrigin(origins = "*", maxAge = 3600)
+@RestController
+@RequestMapping("/salas")
+public class MeetRoomController {
+
+    @Autowired
+    private MeetRoomService meetRoomService;
+
+    @GetMapping
+    public ResponseEntity<MessageResponse> getAll(){
+        List<DTO_MeetRoom> listado = meetRoomService.getAll();
+        return listado!=null && !listado.isEmpty()
+                ? new ResponseEntity<>( MessageResponse.builder().status(HttpStatus.OK).object(listado).message("Listado de salas").build(),
+                HttpStatus.OK)
+                : new ResponseEntity<>( MessageResponse.builder().status(HttpStatus.NOT_FOUND).object(listado).message("Listado de salas").build(),
+                HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<MessageResponse> getById(@PathVariable Integer id) throws RequestException {
+        DTO_MeetRoom dto = meetRoomService.getById(id);
+        return dto!=null
+                ? new ResponseEntity<>( MessageResponse.builder().status(HttpStatus.OK).object(dto).message(null).build(),
+                HttpStatus.OK)
+                : new ResponseEntity<>( MessageResponse.builder().status(HttpStatus.NOT_FOUND).object(dto).message("Elemento no encontrado").build(),
+                HttpStatus.NOT_FOUND);
+    }
+
+}
