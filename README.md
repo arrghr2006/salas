@@ -6,9 +6,13 @@
 
 - PostgreSQL 17
 
-La aplicación está configurada para levantar con el perfil **qa** y utiliza el puerto 8088..
+La aplicación está configurada para levantar con el perfil **qa** y utiliza el puerto 8088.
 
-La api esta documentada usando swagger, **apiDoc url**: http://localhost:8088/swagger-ui/index.html
+La api esta documentada usando swagger, **apiDoc url**: http://localhost:8088/swagger-ui/index.html.
+
+Las dos rutas fundamentales son:
+- http://localhost:8088/salas
+- http://localhost:8088/reservas
 
 La base de datos se debe llamar **meetroombooking**, se puede crear vacia y al ejecutar el proyecto se importan los datos, en el perfil qa hacia una base de datos h2 y en el perfil prod hacia postgreSql.
 
