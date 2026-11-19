@@ -2,35 +2,27 @@ package com.test.meetroomBooking.model.persistence;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "user", uniqueConstraints = { @UniqueConstraint(columnNames = "username") })
+@NoArgsConstructor
+@Table(name = "user_app", schema = "public" )
 public class UserApp {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(columnDefinition = "serial")
-    private Long id;
+    private Integer id;
 
-    @NotBlank
+    @Column(unique = true, length = 100, nullable = false)
     private String username;
 
     @JsonIgnore
-    @NotBlank
-    @Size(max = 120)
+    @Column( nullable = false)
     private String password;
-
-    public UserApp() {
-    }
 
     public UserApp(String username, String password) {
         this.username = username;

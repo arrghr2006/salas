@@ -8,7 +8,7 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class MeetRoomBookingResponseDTO {
+public class DTO_MeetRoomBookingResponse {
 
     private Integer id;
 

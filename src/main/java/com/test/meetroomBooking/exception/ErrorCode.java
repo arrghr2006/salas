@@ -8,6 +8,7 @@ public class ErrorCode {
     public static final String MEETROOM_RESERVED_IN_PERIOD = "I-05";
     public static final String NO_VALID_DATA = "I-06";
     public static final String MEETROOMBOOKING_NOT_FOUND = "I-07";
+    public static final String DUPLICATED_USER= "I-08";
 
     private ErrorCode(){
         throw new IllegalStateException("Utility class");

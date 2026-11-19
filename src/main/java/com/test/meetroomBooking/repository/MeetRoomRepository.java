@@ -10,6 +10,6 @@ import java.util.Optional;
 @Repository
 public interface MeetRoomRepository extends JpaRepository<MeetRoom, Integer> {
 
-    @Query("Select v from MeetRoom v where v.nombre=:name")
-    Optional<MeetRoom> findMeetRoomByName(String name);
+    @Query("Select v from MeetRoom v where lower(v.nombre)=lower(:name)")
+    Optional<MeetRoom> findMeetRoomByNombre(String name);
 }

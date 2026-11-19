@@ -4,39 +4,42 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecurityException;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Function;
 
 @Component
 @Slf4j
 public class JwtUtils {
 
-    public static final String jwtSecret = "9D0EB6B1C2E1FAD0F53A248F6C3B5E4E2F6D8G3H1I0J7K4L1M9N2O3P5Q0R7S9T1U4V2W6X0Y3Z";
+    @Value("${jwt.secret}")
+    private String jwtSecret;
 
-    @Value("${meetroomBooking.app.jwtExpirationToken}")
+    @Value("${jwt.expiration}")
     private int jwtExpirationMs;
 
-    public String generateToken(String userName) {
-        Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, userName);
+    private SecretKey key;
+
+    @PostConstruct
+    public void init() {
+        this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
 
-    private String createToken(Map<String, Object> claims, String userName) {
+    // Generate JWT token
+    public String generateToken(String username) {
         return Jwts.builder()
-                .claims(claims)
-                .subject(userName)
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
-                .signWith(getSignKey())
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -76,20 +79,22 @@ public class JwtUtils {
         return extractExpiration(token).before(new Date());
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
+    // Validate JWT token
+    public boolean validateJwtToken(String token) {
         try {
-            final String username = extractUsername(token);
-            boolean isValid = (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
-            if (!isValid) {
-                log.warn("Invalid token for user: {}", username);
-            }
-            return isValid;
+            Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
+            return true;
+        } catch (SecurityException e) {
+            System.out.println("Invalid JWT signature: " + e.getMessage());
+        } catch (MalformedJwtException e) {
+            System.out.println("Invalid JWT token: " + e.getMessage());
         } catch (ExpiredJwtException e) {
-            log.error("Token expired: {}", e.getMessage());
-            return false;
-        } catch (JwtException e) {
-            log.error("Invalid JWT token: {}", e.getMessage());
-            return false;
+            System.out.println("JWT token is expired: " + e.getMessage());
+        } catch (UnsupportedJwtException e) {
+            System.out.println("JWT token is unsupported: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            System.out.println("JWT claims string is empty: " + e.getMessage());
         }
+        return false;
     }
 }

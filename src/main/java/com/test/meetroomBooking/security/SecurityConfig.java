@@ -1,9 +1,12 @@
 package com.test.meetroomBooking.security;
 
+import com.test.meetroomBooking.security.jwt.AuthEntryPointJwt;
 import com.test.meetroomBooking.security.jwt.AuthTokenFilter;
+import com.test.meetroomBooking.service.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -23,7 +26,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.security.interfaces.RSAPublicKey;
 import java.util.Arrays;
 
 import static org.springframework.security.config.Customizer.withDefaults;
@@ -33,8 +35,16 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-
     private final AuthTokenFilter authFilter;
+
+    UserDetailsServiceImpl userDetailsService;
+
+    private AuthEntryPointJwt unauthorizedHandler;
+
+    @Bean
+    public AuthTokenFilter authenticationJwtTokenFilter() {
+        return new AuthTokenFilter();
+    }
 
     public SecurityConfig(AuthTokenFilter authFilter) {
         this.authFilter = authFilter;
@@ -48,14 +58,21 @@ public class SecurityConfig {
     public SecurityFilterChain publicResourcesFilterChain(HttpSecurity http) throws Exception {
         String[] whiteList = {
                 "/salas",
-                "/v3/api-docs/**",
+                "/reservas",
+                "/reservas/list",
+                "/api-docs/**",
                 "/v3/api-docs/swagger-config",
                 "/swagger-ui/**",
                 "/swagger-ui.html"
         };
         return http
                 .securityMatcher(whiteList)
-                .authorizeHttpRequests(authz -> authz.anyRequest().permitAll())
+                .authorizeHttpRequests(
+                    authz -> authz
+                            .requestMatchers(HttpMethod.DELETE, "/salas/**").authenticated()
+                            .requestMatchers(HttpMethod.POST, "/reservas").authenticated()
+                            .anyRequest().permitAll()
+                )
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(withDefaults())
                 .build();
@@ -65,9 +82,9 @@ public class SecurityConfig {
     @Order(2)
     public SecurityFilterChain localAuthFilterChain(HttpSecurity http, AuthenticationProvider authenticationProvider) throws Exception {
         return http
-                .securityMatcher("/api/rest/**")
+                .securityMatcher("/**")
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/api/rest/**").permitAll()
+                        .requestMatchers("/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(withDefaults())

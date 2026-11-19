@@ -1,18 +1,15 @@
 package com.test.meetroomBooking.util;
 
-import com.test.meetroomBooking.model.dto.DTO_MeetRoom;
 import com.test.meetroomBooking.model.dto.DTO_MeetRoomBooking;
 import com.test.meetroomBooking.model.dto.DTO_MeetRoomBookingRequest;
-import com.test.meetroomBooking.model.dto.MeetRoomBookingResponseDTO;
+import com.test.meetroomBooking.model.dto.DTO_MeetRoomBookingResponse;
 import com.test.meetroomBooking.model.persistence.MeetRoom;
 import com.test.meetroomBooking.model.persistence.MeetRoomBooking;
-import com.test.meetroomBooking.repository.MeetRoomRepository;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @Data
 public class MeetRoomBookingDTOUtil {
@@ -33,8 +30,8 @@ public class MeetRoomBookingDTOUtil {
         return new MeetRoomBooking( room, dto.getResponsable(), dto.getFechaInicio(), dto.getFechaFin());
     }
 
-    public static MeetRoomBookingResponseDTO toResponseDTO(MeetRoomBooking entity){
-        MeetRoomBookingResponseDTO dto = new MeetRoomBookingResponseDTO();
+    public static DTO_MeetRoomBookingResponse toResponseDTO(MeetRoomBooking entity){
+        DTO_MeetRoomBookingResponse dto = new DTO_MeetRoomBookingResponse();
         BeanUtils.copyProperties(entity, dto);
         dto.setSala(entity.getMeetRoom().getNombre());
         return dto;

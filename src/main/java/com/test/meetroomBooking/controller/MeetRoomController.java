@@ -2,8 +2,10 @@ package com.test.meetroomBooking.controller;
 
 import com.test.meetroomBooking.exception.RequestException;
 import com.test.meetroomBooking.model.dto.DTO_MeetRoom;
+import com.test.meetroomBooking.model.dto.DTO_MeetRoomResponse;
 import com.test.meetroomBooking.payload.MessageResponse;
 import com.test.meetroomBooking.service.MeetRoomService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,4 +41,15 @@ public class MeetRoomController {
                 HttpStatus.NOT_FOUND);
     }
 
+    @PostMapping
+    public ResponseEntity<MessageResponse> create(@RequestBody @Valid DTO_MeetRoom dto) throws RequestException {
+        DTO_MeetRoomResponse resultado = meetRoomService.create(dto);
+        return new ResponseEntity<>( MessageResponse.builder().status(HttpStatus.OK).object(resultado).message(null).build(), HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<MessageResponse> eliminar(@PathVariable Integer id) {
+        meetRoomService.delete(id);
+        return new ResponseEntity<>( MessageResponse.builder().status(HttpStatus.OK).object(null).message("Se eliminó la sala correctamente").build(), HttpStatus.OK);
+    }
 }

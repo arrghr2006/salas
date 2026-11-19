@@ -3,7 +3,6 @@ package com.test.meetroomBooking.model.persistence;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.Instant;
 import java.util.Date;
 
 @Getter
@@ -18,7 +17,7 @@ public class MeetRoomBooking {
     @Column(columnDefinition = "serial")
     private Integer id;
 
-    @Column(unique = true, length = 100, nullable = false)
+    @Column( length = 100, nullable = false)
     private String responsable;
 
     @Column(name="FECHA_INICIO")
@@ -27,7 +26,10 @@ public class MeetRoomBooking {
     @Column(name="FECHA_FIN")
     private Date fechaFin;
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @Column(name="nombre_sala")
+    private String nombreSala;
+
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="MEETROOM_ID")
     private MeetRoom meetRoom;
 
@@ -37,6 +39,7 @@ public class MeetRoomBooking {
         this.setMeetRoom(salon);
         this.setFechaInicio(dateInit);
         this.setFechaFin(dateFin);
+        this.setNombreSala(salon.getNombre());
     }
 
 }
