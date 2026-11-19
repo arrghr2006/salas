@@ -71,7 +71,7 @@ public class MeetRoomBookingController {
                 HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<MessageResponse> create(@RequestBody @Valid DTO_MeetRoomBooking dto) throws RequestException {
         DTO_MeetRoomBookingResponse resultado = meetRoomBookingService.create(dto);
         return new ResponseEntity<>( MessageResponse.builder().status(HttpStatus.OK).object(resultado).message(null).build(), HttpStatus.CREATED);

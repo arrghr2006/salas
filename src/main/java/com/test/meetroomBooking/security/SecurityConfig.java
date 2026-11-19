@@ -50,30 +50,35 @@ public class SecurityConfig {
         this.authFilter = authFilter;
     }
 
-    /* ============================================================
-        1) Recursos públicos (Swagger / OpenAPI)
-        ============================================================ */
     @Bean
     @Order(1)
-    public SecurityFilterChain publicResourcesFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain publicResourcesFilterChain(HttpSecurity http, AuthenticationProvider authenticationProvider) throws Exception {
         String[] whiteList = {
-                "/salas",
-                "/reservas",
-                "/reservas/list",
+                "/auth/**",
                 "/api-docs/**",
                 "/v3/api-docs/swagger-config",
                 "/swagger-ui/**",
-                "/swagger-ui.html"
+                "/swagger-ui.html",
+                "/reservas/list",
+                "/reservas/add"
         };
         return http
                 .securityMatcher(whiteList)
                 .authorizeHttpRequests(
                     authz -> authz
+                            .requestMatchers(HttpMethod.POST, "/reservas/list").permitAll()
+                            .requestMatchers(HttpMethod.POST, "/reservas/add").authenticated()
+                            .requestMatchers(HttpMethod.DELETE, "/reservas/**").authenticated()
+                            .requestMatchers(HttpMethod.POST, "/salas/**").authenticated()
                             .requestMatchers(HttpMethod.DELETE, "/salas/**").authenticated()
-                            .requestMatchers(HttpMethod.POST, "/reservas").authenticated()
-                            .anyRequest().permitAll()
+                            .requestMatchers(whiteList).permitAll()
+                            .anyRequest().authenticated()
                 )
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(unauthorizedHandler))
                 .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
                 .cors(withDefaults())
                 .build();
     }
@@ -84,10 +89,11 @@ public class SecurityConfig {
         return http
                 .securityMatcher("/**")
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/salas/**").permitAll()
+                        .requestMatchers("/**").authenticated()
                         .anyRequest().authenticated()
                 )
-                .httpBasic(withDefaults())
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(unauthorizedHandler))
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)

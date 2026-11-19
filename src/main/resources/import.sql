@@ -1,8 +1,14 @@
-IINSERT INTO meetroom(id,nombre) VALUES (1,'sala-1');
- INSERT INTO meetroom(id,nombre) VALUES (2,'sala-2');
- INSERT INTO meetroom(id,nombre) VALUES (3,'sala-3');
+ DELETE FROM meetroom_booking;
+ DELETE FROM meetroom;
+ DELETE FROM user_app;
 
- INSERT INTO user_app( username, password ) VALUES ( 'admin','$2a$10$xP139cEj0O.CivNeIHM3t.QYyaZq5THtXtDT9WWOJOG8ptogTbHM6');
+ INSERT INTO meetroom(nombre) VALUES ('sala-1');
+ INSERT INTO meetroom(nombre) VALUES ('sala-2');
+ INSERT INTO meetroom(nombre) VALUES ('sala-3');
+
+ SELECT setval('meetroom_seq', 3, true);
+
+ INSERT INTO user_app( username, password ) VALUES ( 'admin','$2b$10$3s9ss3Mu1DMdfNFXXo.2Le5qD/5RZ9epZKTrNNDRL/Wu8SoSGL6y.');
 
  INSERT INTO meetroom_booking( responsable, meetroom_id, fecha_inicio, fecha_fin, nombre_sala) VALUES( 'victor', 1, '2026-11-01 08:00:00', '2026-11-02 16:00:00','sala-1');
  INSERT INTO meetroom_booking( responsable, meetroom_id, fecha_inicio, fecha_fin, nombre_sala) VALUES( 'victor', 1, '2026-11-03 08:00:00', '2026-11-04 16:00:00','sala-1');

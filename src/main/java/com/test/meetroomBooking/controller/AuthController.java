@@ -43,8 +43,8 @@ public class AuthController {
                     new JwtResponse(token, userDetails.getId(), userDetails.getUsername())
             ).message("Autenticación exitosa").build(), HttpStatus.OK);
         }
-        return new ResponseEntity<>(GenericResponse.builder().status(HttpStatus.NOT_FOUND).object(null).message("Autenticación fallida.").build(),
-                HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(GenericResponse.builder().status(HttpStatus.FORBIDDEN).object(null).message("Autenticación fallida.").build(),
+                HttpStatus.FORBIDDEN);
     }
 
     @PostMapping("/signup")

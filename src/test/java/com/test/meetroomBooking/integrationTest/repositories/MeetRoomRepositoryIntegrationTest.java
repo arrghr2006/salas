@@ -10,7 +10,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@SpringBootTest
+@SpringBootTest(properties = {
+    "spring.datasource.url=jdbc:h2:mem:meetroom_test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE",
+    "spring.jpa.hibernate.ddl-auto=create-drop"
+})
 class MeetRoomRepositoryIntegrationTest {
     @Autowired
     private MeetRoomRepository meetRoomRepository;
