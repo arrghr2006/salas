@@ -39,3 +39,5 @@
  INSERT INTO meetroom_booking( responsable, meetroom_id, fecha_inicio, fecha_fin, nombre_sala) VALUES( 'victor', 3, '2026-11-22 08:00:00', '2026-11-23 16:00:00','sala-3');
  INSERT INTO meetroom_booking( responsable, meetroom_id, fecha_inicio, fecha_fin, nombre_sala) VALUES( 'victor', 3, '2026-11-24 08:00:00', '2026-11-28 16:00:00','sala-3');
  INSERT INTO meetroom_booking( responsable, meetroom_id, fecha_inicio, fecha_fin, nombre_sala) VALUES( 'victor', 3, '2026-11-29 08:00:00', '2026-11-30 16:00:00','sala-3');
+
+ SELECT setval('meetroom_booking_seq', 27, true);
